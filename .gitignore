@@ -1,0 +1,35 @@
+# Environment variables
+.env
+
+# Virtual environments
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Trained models
+models/*.pth
+models/*.json
+
+# Dataset
+data/
+CUB_200_2011/
+*.tgz
+
+# Python packaging
+*.egg-info/
+
+# Testing cache
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

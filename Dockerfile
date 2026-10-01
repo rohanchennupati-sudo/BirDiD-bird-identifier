@@ -3,7 +3,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+RUN grep -v -E '^(torch|torchvision)==' requirements.txt > requirements-runtime.txt \
+    && pip install --no-cache-dir -r requirements-runtime.txt \
+    && pip install --no-cache-dir torch==2.12.0+cpu torchvision==0.27.0+cpu \
+       --index-url https://download.pytorch.org/whl/cpu
 
 COPY app ./app
 COPY ml ./ml

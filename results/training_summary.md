@@ -1,6 +1,6 @@
 # Training summary
 
-Training was run on a Google Colab Tesla T4.
+Training was run on a Google Colab Tesla T4. It was broken into 2 phases of 10 and 25 epochs respectively.
 
 ## Phase 1
 
@@ -12,7 +12,7 @@ Training was run on a Google Colab Tesla T4.
 
 ## Phase 2
 
-- 25 epochs completed
+- 25 epochs 
 - Entire network fine-tuned
 - Learning rate: `5e-5`
 - Weight decay: `1e-4`

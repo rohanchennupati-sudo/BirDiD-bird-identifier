@@ -2,231 +2,375 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avian Intelligence</title>
   <meta name="description" content="AI bird species identification">
+
   <style>
     :root {
-      --teal:#1D6A72; --light:#E8F4F5; --dark:#1E293B;
-      --gray:#64748B; --bg:#F8FAFC; --border:#E2E8F0;
-      --white:#FFF; --green:#2D9B8A; --radius:14px;
+      --teal: #1D6A72;
+      --light: #E8F4F5;
+      --dark: #1E293B;
+      --gray: #64748B;
+      --bg: #F8FAFC;
+      --border: #E2E8F0;
+      --white: #FFF;
+      --green: #2D9B8A;
+      --radius: 14px;
     }
-    * { box-sizing:border-box; margin:0; padding:0; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:var(--bg); color:var(--dark); line-height:1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
     }
+
     header {
-      background:var(--teal); color:white; padding:1.25rem 2rem;
+      background: var(--teal);
+      color: white;
+      padding: 1.25rem 2rem;
     }
-    header h1 { font-size:1.45rem; }
-    header p { opacity:.85; font-size:.9rem; }
-    main { max-width:760px; margin:2rem auto; padding:0 1rem; }
+
+    header h1 {
+      font-size: 1.45rem;
+    }
+
+    header p {
+      opacity: 0.85;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
     .card {
-      background:var(--white); border:1px solid var(--border);
-      border-radius:var(--radius); padding:1.5rem;
-      box-shadow:0 8px 30px rgba(15,23,42,.05);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
     }
+
     .drop {
-      border:2px dashed var(--border); border-radius:10px;
-      padding:2.75rem 1rem; text-align:center; cursor:pointer;
-      position:relative; transition:.2s;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2.75rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: 0.2s;
     }
-    .drop:hover,.drop.over { border-color:var(--teal); background:var(--light); }
+
+    .drop:hover,
+    .drop.over {
+      border-color: var(--teal);
+      background: var(--light);
+    }
+
     .drop input {
-      position:absolute; inset:0; opacity:0; cursor:pointer;
-      width:100%; height:100%;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
     }
-    .icon { font-size:2.5rem; margin-bottom:.5rem; }
-    .drop p { color:var(--gray); }
-    .drop strong { color:var(--teal); }
-    #preview { display:none; margin-top:1rem; }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop p {
+      color: var(--gray);
+    }
+
+    .drop strong {
+      color: var(--teal);
+    }
+
+    #preview {
+      display: none;
+      margin-top: 1rem;
+    }
+
     #preview img {
-      width:100%; max-height:320px; object-fit:cover; border-radius:10px;
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 10px;
     }
-    .filename { color:var(--gray); font-size:.85rem; margin-top:.4rem; }
+
+    .filename {
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+    }
+
     button {
-      width:100%; border:0; border-radius:9px; padding:.9rem;
-      margin-top:1rem; background:var(--teal); color:white;
-      font-size:1rem; cursor:pointer; font-weight:600;
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 0.9rem;
+      margin-top: 1rem;
+      background: var(--teal);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
     }
-    button:disabled { opacity:.5; cursor:not-allowed; }
-    #status { margin-top:1rem; color:var(--gray); text-align:center; }
-    #result { display:none; margin-top:1.5rem; }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 1rem;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    #result {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
     .hero {
-      background:var(--light); border-radius:12px; padding:1.25rem;
-      text-align:center;
+      background: var(--light);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
     }
-    .hero h2 { color:var(--teal); margin-bottom:.25rem; }
-    .prob { font-size:2rem; font-weight:700; }
-    .confidence { color:var(--gray); }
-    .top5 { margin-top:1rem; }
-    .row { margin:.8rem 0; }
-    .rowtop { display:flex; justify-content:space-between; font-size:.9rem; }
-    .bar { height:8px; background:#E2E8F0; border-radius:99px; overflow:hidden; margin-top:.3rem; }
-    .fill { height:100%; background:var(--green); border-radius:99px; }
-    .note {
-      margin-top:1rem; font-size:.8rem; color:var(--gray);
-      text-align:center;
+
+    .hero h2 {
+      color: var(--teal);
+      margin-bottom: 0.25rem;
     }
-    @media(max-width:600px) {
-      header { padding:1rem; }
-      main { margin-top:1rem; }
-      .card { padding:1rem; }
+
+    .prob {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .confidence {
+      color: var(--gray);
+    }
+
+    .top5 {
+      margin-top: 1rem;
+    }
+
+    .row {
+      margin: 0.8rem 0;
+    }
+
+    .rowtop {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .bar {
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 0.3rem;
+    }
+
+    .fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 99px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 1rem;
+      }
+
+      main {
+        margin-top: 1rem;
+      }
+
+      .card {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
+
 <body>
-<header>
-  <h1>🐦 Avian Intelligence</h1>
-  <p>Bird species identification powered by EfficientNet-B3</p>
-</header>
+  <header>
+    <h1>🐦 Avian Intelligence</h1>
+    <p>Bird species identification powered by EfficientNet-B3</p>
+  </header>
 
-<main>
-  <section class="card">
-    <div id="drop" class="drop">
-      <div class="icon">📷</div>
-      <p><strong>Choose a bird image</strong> or drag it here</p>
-      <p>JPEG, PNG or WebP · maximum 10 MB</p>
-      <input id="file" type="file" accept="image/jpeg,image/png,image/webp">
-    </div>
-
-    <div id="preview">
-      <img id="previewImg" alt="Selected bird">
-      <div id="filename" class="filename"></div>
-    </div>
-
-    <button id="predict" disabled>Identify Bird</button>
-    <div id="status"></div>
-
-    <div id="result">
-      <div class="hero">
-        <h2 id="species"></h2>
-        <div id="probability" class="prob"></div>
-        <div id="confidence" class="confidence"></div>
+  <main>
+    <section class="card">
+      <div id="drop" class="drop">
+        <div class="icon">📷</div>
+        <p><strong>Choose a bird image</strong> or drag it here</p>
+        <p>JPEG, PNG or WebP · maximum 10 MB</p>
+        <input
+          id="file"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+        >
       </div>
 
-      <div class="top5">
-        <h3>Top 5 predictions</h3>
-        <div id="top5"></div>
+      <div id="preview">
+        <img id="previewImg" alt="Selected bird">
+        <div id="filename" class="filename"></div>
       </div>
-    </div>
 
-    <p class="note">
-      Before the trained checkpoint is installed, the application uses a deterministic mock classifier.
-    </p>
-  </section>
-</main>
+      <button id="predict" disabled>Identify Bird</button>
+      <div id="status"></div>
 
-<script>
-const fileInput = document.getElementById("file");
-const drop = document.getElementById("drop");
-const preview = document.getElementById("preview");
-const previewImg = document.getElementById("previewImg");
-const filename = document.getElementById("filename");
-const predictButton = document.getElementById("predict");
-const status = document.getElementById("status");
-const result = document.getElementById("result");
+      <div id="result">
+        <div class="hero">
+          <h2 id="species"></h2>
+          <div id="probability" class="prob"></div>
+          <div id="confidence" class="confidence"></div>
+        </div>
 
-let selectedFile = null;
+        <div class="top5">
+          <h3>Top 5 predictions</h3>
+          <div id="top5"></div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-function selectFile(file) {
-  if (!file) return;
+  <script>
+    const fileInput = document.getElementById("file");
+    const drop = document.getElementById("drop");
+    const preview = document.getElementById("preview");
+    const previewImg = document.getElementById("previewImg");
+    const filename = document.getElementById("filename");
+    const predictButton = document.getElementById("predict");
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
 
-  const allowed = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowed.includes(file.type)) {
-    status.textContent = "Please choose a JPEG, PNG or WebP image.";
-    return;
-  }
+    let selectedFile = null;
 
-  selectedFile = file;
-  previewImg.src = URL.createObjectURL(file);
-  filename.textContent = file.name;
-  preview.style.display = "block";
-  predictButton.disabled = false;
-  result.style.display = "none";
-  status.textContent = "";
-}
+    function selectFile(file) {
+      if (!file) return;
 
-fileInput.addEventListener("change", () => selectFile(fileInput.files[0]));
+      const allowed = ["image/jpeg", "image/png", "image/webp"];
 
-["dragenter", "dragover"].forEach(eventName => {
-  drop.addEventListener(eventName, e => {
-    e.preventDefault();
-    drop.classList.add("over");
-  });
-});
+      if (!allowed.includes(file.type)) {
+        status.textContent = "Please choose a JPEG, PNG or WebP image.";
+        return;
+      }
 
-["dragleave", "drop"].forEach(eventName => {
-  drop.addEventListener(eventName, e => {
-    e.preventDefault();
-    drop.classList.remove("over");
-  });
-});
-
-drop.addEventListener("drop", e => {
-  selectFile(e.dataTransfer.files[0]);
-});
-
-predictButton.addEventListener("click", async () => {
-  if (!selectedFile) return;
-
-  predictButton.disabled = true;
-  status.textContent = "Analysing image...";
-  result.style.display = "none";
-
-  const form = new FormData();
-  form.append("image", selectedFile);
-  form.append("backend", "auto");
-
-  try {
-    const response = await fetch("/api/v1/predict", {
-      method: "POST",
-      body: form
-    });
-
-    const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error(payload.detail || "Prediction failed.");
+      selectedFile = file;
+      previewImg.src = URL.createObjectURL(file);
+      filename.textContent = file.name;
+      preview.style.display = "block";
+      predictButton.disabled = false;
+      result.style.display = "none";
+      status.textContent = "";
     }
 
-    const bird = payload.data;
-
-    document.getElementById("species").textContent = bird.common_name;
-    document.getElementById("probability").textContent =
-      `${bird.probability}%`;
-    document.getElementById("confidence").textContent =
-      `${bird.confidence} confidence`;
-
-    const top5 = document.getElementById("top5");
-    top5.innerHTML = "";
-
-    bird.top5.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "row";
-
-      row.innerHTML = `
-        <div class="rowtop">
-          <span>${item.species}</span>
-          <span>${item.probability}%</span>
-        </div>
-        <div class="bar">
-          <div class="fill" style="width:${item.probability}%"></div>
-        </div>
-      `;
-
-      top5.appendChild(row);
+    fileInput.addEventListener("change", () => {
+      selectFile(fileInput.files[0]);
     });
 
-    result.style.display = "block";
-    status.textContent = "";
-  } catch (error) {
-    status.textContent = error.message;
-  } finally {
-    predictButton.disabled = false;
-  }
-});
-</script>
+    ["dragenter", "dragover"].forEach(eventName => {
+      drop.addEventListener(eventName, event => {
+        event.preventDefault();
+        drop.classList.add("over");
+      });
+    });
+
+    ["dragleave", "drop"].forEach(eventName => {
+      drop.addEventListener(eventName, event => {
+        event.preventDefault();
+        drop.classList.remove("over");
+      });
+    });
+
+    drop.addEventListener("drop", event => {
+      selectFile(event.dataTransfer.files[0]);
+    });
+
+    predictButton.addEventListener("click", async () => {
+      if (!selectedFile) return;
+
+      predictButton.disabled = true;
+      status.textContent = "Analysing image...";
+      result.style.display = "none";
+
+      const form = new FormData();
+      form.append("image", selectedFile);
+      form.append("backend", "auto");
+
+      try {
+        const response = await fetch("/api/v1/predict", {
+          method: "POST",
+          body: form
+        });
+
+        const payload = await response.json();
+
+        if (!response.ok) {
+          throw new Error(payload.detail || "Prediction failed.");
+        }
+
+        const bird = payload.data;
+
+        document.getElementById("species").textContent =
+          bird.common_name;
+
+        document.getElementById("probability").textContent =
+          `${bird.probability}%`;
+
+        document.getElementById("confidence").textContent =
+          `${bird.confidence} confidence`;
+
+        const top5 = document.getElementById("top5");
+        top5.innerHTML = "";
+
+        bird.top5.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "row";
+
+          row.innerHTML = `
+            <div class="rowtop">
+              <span>${item.species}</span>
+              <span>${item.probability}%</span>
+            </div>
+            <div class="bar">
+              <div
+                class="fill"
+                style="width:${item.probability}%"
+              ></div>
+            </div>
+          `;
+
+          top5.appendChild(row);
+        });
+
+        result.style.display = "block";
+        status.textContent = "";
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        predictButton.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>

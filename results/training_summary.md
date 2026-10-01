@@ -1,6 +1,6 @@
 # Training summary
 
-Training was run on a Google Colab Tesla T4. It was broken into 2 phases of 10 and 25 epochs respectively.
+Training was run on a Google Colab Tesla T4. It was broken into 2 phases of 10 and 25 epochs respectively. The details of the phases are as follows:
 
 ## Phase 1
 

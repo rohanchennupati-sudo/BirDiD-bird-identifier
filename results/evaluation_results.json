@@ -1,0 +1,19 @@
+{
+  "top1_accuracy": 80.32,
+  "top5_accuracy": 96.34,
+  "num_test_images": 5794,
+  "worst_5": [
+    ["Common_Tern", 13.3],
+    ["Western_Wood_Pewee", 26.7],
+    ["Herring_Gull", 30.0],
+    ["Elegant_Tern", 36.7],
+    ["Acadian_Flycatcher", 37.9]
+  ],
+  "top_confusions": [
+    ["Common_Tern->Artic_Tern", 13],
+    ["Elegant_Tern->Caspian_Tern", 12],
+    ["Pelagic_Cormorant->Brandt_Cormorant", 12],
+    ["Acadian_Flycatcher->Least_Flycatcher", 11],
+    ["American_Crow->Fish_Crow", 10]
+  ]
+}

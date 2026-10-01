@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: avian-intelligence
+    runtime: docker
+    plan: free

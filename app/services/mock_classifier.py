@@ -1,15 +1,10 @@
-# Phase 1 placeholder. Returns deterministic dummy data.
-# Replace with PyTorchBirdClassifier in Chapter 10.
-from app.models.schemas import BirdPrediction, ConfidenceLevel
 class MockBirdClassifier:
-    """
-    Fake classifier that always returns "Atlantic Puffin".
-    Useful for testing backend plumbing before the real model exists.
-    Interface is identical to PyTorchBirdClassifier so swapping is trivial.
-    """
+    """Deterministic classifier used until the trained checkpoint exists."""
+
     @property
     def is_available(self) -> bool:
         return True
+
     def predict(self, image_bytes: bytes, content_type: str) -> dict:
         return {
             "common_name": "Atlantic Puffin",
@@ -25,4 +20,3 @@ class MockBirdClassifier:
             ],
             "not_a_bird": False,
         }
-    

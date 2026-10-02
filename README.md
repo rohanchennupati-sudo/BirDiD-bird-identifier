@@ -66,8 +66,8 @@ The final model was evaluated on the official CUB test set.
 |---|---:|
 | Test images | 5,794 |
 | Species | 200 |
-| Top-1 accuracy | **80.32%** |
-| Top-5 accuracy | **96.34%** |
+| Top-1 accuracy | **79.36%** |
+| Top-5 accuracy | **95.93%** |
 
 Top-5 accuracy is particularly useful for this problem because often even humans let alone machines don't always get the species right on their first guess, especially when two species are visually very similar. Using the Top-5 accuracy if the correct species is somewhere among its five strongest predictions, the system has still narrowed the field considerably.
 
@@ -77,7 +77,7 @@ results/evaluation_results.json
 ```
 
 
-> **Note on these results:** this checkpoint was trained before I fixed a bug in `ml/dataset.py`. The training and validation splits shared one `ImageFolder`, so setting the validation transform also switched off augmentation for training. The model above was therefore trained **without** data augmentation. The loader now builds separate datasets for each split (covered by `tests/test_dataset.py`), and retraining with augmentation is the next step.
+> **Note on these results:** the first published model (v1.0, 80.32% top-1 / 96.34% top-5) was trained while a bug in `ml/dataset.py` switched off augmentation: the training and validation splits shared one `ImageFolder`, so setting the validation transform changed training too. After fixing it (covered by `tests/test_dataset.py`), I retrained with augmentation. Validation accuracy was unchanged (79.53% vs 79.56%) and the test score is within run-to-run noise, while the weakest class improved from 13.3% to 33.3%. The current release (v1.1) is the model the current code produces. Details and the comparison are in `results/training_summary.md`.
 
 ---
 
@@ -108,7 +108,7 @@ pip install -r requirements.txt
 The trained checkpoint is intentionally **not stored in the Git repository**.
 
 Download `best_model_finetuned.pth` from the
-[**v1.0.0 release**](https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier/releases/tag/v1.0.0).
+[**v1.1.0 release**](https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier/releases/tag/v1.1.0).
 
 Place it here:
 ```text

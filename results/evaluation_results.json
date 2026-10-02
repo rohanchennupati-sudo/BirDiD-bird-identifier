@@ -1,19 +1,69 @@
 {
-  "top1_accuracy": 80.32,
-  "top5_accuracy": 96.34,
+  "top1_accuracy": 79.36,
+  "top5_accuracy": 95.93,
   "num_test_images": 5794,
   "worst_5": [
-    ["Common_Tern", 13.3],
-    ["Western_Wood_Pewee", 26.7],
-    ["Herring_Gull", 30.0],
-    ["Elegant_Tern", 36.7],
-    ["Acadian_Flycatcher", 37.9]
+    [
+      "Common_Tern",
+      33.3
+    ],
+    [
+      "Herring_Gull",
+      33.3
+    ],
+    [
+      "Western_Wood_Pewee",
+      33.3
+    ],
+    [
+      "California_Gull",
+      36.7
+    ],
+    [
+      "Forsters_Tern",
+      36.7
+    ]
   ],
   "top_confusions": [
-    ["Common_Tern->Artic_Tern", 13],
-    ["Elegant_Tern->Caspian_Tern", 12],
-    ["Pelagic_Cormorant->Brandt_Cormorant", 12],
-    ["Acadian_Flycatcher->Least_Flycatcher", 11],
-    ["American_Crow->Fish_Crow", 10]
+    [
+      "Acadian_Flycatcher->Least_Flycatcher",
+      10
+    ],
+    [
+      "Elegant_Tern->Caspian_Tern",
+      9
+    ],
+    [
+      "Artic_Tern->Common_Tern",
+      8
+    ],
+    [
+      "Brandt_Cormorant->Pelagic_Cormorant",
+      8
+    ],
+    [
+      "Chuck_will_Widow->Whip_poor_Will",
+      8
+    ],
+    [
+      "Forsters_Tern->Least_Tern",
+      8
+    ],
+    [
+      "Loggerhead_Shrike->Great_Grey_Shrike",
+      8
+    ],
+    [
+      "Tree_Sparrow->House_Sparrow",
+      8
+    ],
+    [
+      "American_Crow->Fish_Crow",
+      7
+    ],
+    [
+      "Barn_Swallow->Cliff_Swallow",
+      7
+    ]
   ]
 }

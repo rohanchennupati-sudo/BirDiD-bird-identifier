@@ -14,7 +14,7 @@ COPY ml ./ml
 COPY static ./static
 COPY models ./models
 
-RUN python -c "import urllib.request; urllib.request.urlretrieve('https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier/releases/download/v1.0.0/best_model_finetuned.pth', 'models/best_model_finetuned.pth')"
+RUN python -c "import urllib.request; urllib.request.urlretrieve('https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier/releases/download/v1.1.0/best_model_finetuned.pth', 'models/best_model_finetuned.pth')"
 
 EXPOSE 8000
 

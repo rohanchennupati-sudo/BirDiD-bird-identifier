@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Starting Avian Intelligence..."
+Write-Host "Starting BirDiD..."
 Write-Host ""
 
 if (-not (Test-Path ".venv")) {

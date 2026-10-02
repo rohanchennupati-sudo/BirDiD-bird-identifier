@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -22,5 +22,8 @@ class BirdPrediction(BaseModel):
 class PredictionResponse(BaseModel):
     success: bool
     request_id: str
+    backend_used: Literal["pytorch", "mock"] = Field(
+        description="Which classifier produced the prediction"
+    )
     data: Optional[BirdPrediction] = None
     error: Optional[str] = None

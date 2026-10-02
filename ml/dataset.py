@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, Subset
 from torchvision import datasets, transforms
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -36,30 +36,35 @@ def create_dataloaders(
 ):
     data_dir = str(data_dir).rstrip("/\\")
 
-    train_full = datasets.ImageFolder(
+    # Two views of the same training folder: one with augmentation (for the
+    # training split) and one without (for the validation split). Using one
+    # ImageFolder for both would make them share a single transform.
+    train_aug = datasets.ImageFolder(
         f"{data_dir}/train",
         transform=TRAIN_TRANSFORMS,
+    )
+    train_eval = datasets.ImageFolder(
+        f"{data_dir}/train",
+        transform=EVAL_TRANSFORMS,
     )
     test_set = datasets.ImageFolder(
         f"{data_dir}/test",
         transform=EVAL_TRANSFORMS,
     )
 
-    class_names = train_full.classes
+    class_names = train_aug.classes
 
-    n_val = int(len(train_full) * val_fraction)
-    n_train = len(train_full) - n_val
+    n_val = int(len(train_aug) * val_fraction)
+    n_train = len(train_aug) - n_val
 
+    # Same permutation random_split(train, [n_train, n_val]) would produce,
+    # so the train/validation split is identical to the original one.
     g = torch.Generator().manual_seed(42)
-    train_set, val_set = random_split(
-        train_full,
-        [n_train, n_val],
-        generator=g,
-    )
+    indices = torch.randperm(len(train_aug), generator=g).tolist()
+    train_indices, val_indices = indices[:n_train], indices[n_train:]
 
-    # random_split produces Subsets over the same ImageFolder.
-    # Use deterministic evaluation transforms for validation.
-    val_set.dataset.transform = EVAL_TRANSFORMS
+    train_set = Subset(train_aug, train_indices)
+    val_set = Subset(train_eval, val_indices)
 
     train_loader = DataLoader(
         train_set,

@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 20
 
     model_checkpoint_path: str = "models/best_model_finetuned.pth"
-    class_names_path: str = "models/class_names.json"
 
     model_config = SettingsConfigDict(
         env_file=".env",

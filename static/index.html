@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avian Intelligence</title>
+  <title>BirDiD</title>
   <meta name="description" content="AI bird species identification">
 
   <style>
@@ -213,7 +213,7 @@
 
 <body>
   <header>
-    <h1>🐦 Avian Intelligence</h1>
+    <h1>🐦 BirDiD</h1>
     <p>Bird species identification powered by EfficientNet-B3</p>
   </header>
 
@@ -323,10 +323,15 @@
           body: form
         });
 
-        const payload = await response.json();
+        let payload;
+        try {
+          payload = await response.json();
+        } catch {
+          throw new Error(`Server error (${response.status}).`);
+        }
 
         if (!response.ok) {
-          throw new Error(payload.detail || "Prediction failed.");
+          throw new Error(payload.detail || payload.error || "Prediction failed.");
         }
 
         const bird = payload.data;
@@ -338,7 +343,9 @@
           `${bird.probability}%`;
 
         document.getElementById("confidence").textContent =
-          `${bird.confidence} confidence`;
+          payload.backend_used === "mock"
+            ? "Demo result: the trained model is not loaded"
+            : `${bird.confidence} confidence`;
 
         const top5 = document.getElementById("top5");
         top5.innerHTML = "";

@@ -1,1 +1,5 @@
--r requirements.txt
+# For training on a GPU machine (e.g. Google Colab, which already has these).
+# Installs the default CUDA builds of PyTorch instead of the CPU-only ones.
+torch
+torchvision
+numpy

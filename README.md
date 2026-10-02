@@ -35,12 +35,12 @@ Give BirDiD an image:
   Top predictions
 ```
 
-The API accepts JPEG, PNG, and WebP images. When the trained checkpoint is available, the application uses the real PyTorch classifier. If not, the backend can fall back to a deterministic mock classifier. This makes it possible to develop and test the API and frontend without needing the model present.
+The API accepts JPEG, PNG, and WebP images. When the trained checkpoint is available, the application uses the real PyTorch classifier. If not, it falls back to a mock classifier that returns a fixed demo answer, so the API and frontend can be developed and tested without the model. Every response includes `backend_used` (`pytorch` or `mock`) so a demo answer is never mistaken for a real one, and the mock fallback is disabled when `ENVIRONMENT=production`.
 
 The application also supports explicitly selecting:
 - `auto` — use the trained model when available, otherwise use the mock
 - `pytorch` — require the trained model
-- `mock` — use the deterministic mock classifier
+- `mock` — use the mock classifier (fixed demo answer)
 
 ---
 
@@ -76,14 +76,17 @@ The complete evaluation output is available in:
 results/evaluation_results.json
 ```
 
+
+> **Note on these results:** this checkpoint was trained before I fixed a bug in `ml/dataset.py`. The training and validation splits shared one `ImageFolder`, so setting the validation transform also switched off augmentation for training. The model above was therefore trained **without** data augmentation. The loader now builds separate datasets for each split (covered by `tests/test_dataset.py`), and retraining with augmentation is the next step.
+
 ---
 
 # Try it yourself
 
 ## 1. Clone the repository
 ```powershell
-git clone https://github.com/rohanchennupati-sudo/avian-intelligence.git
-cd avian-intelligence
+git clone https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier.git
+cd BirDiD-bird-identifier
 ```
 
 ## 2. Create a virtual environment
@@ -99,13 +102,13 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-> **Note:** the PyTorch dependencies in `requirements.txt` use CPU builds. If you want to train the model, use the training environment described below rather than trying to train locally on CPU.
+> **Note:** `requirements.txt` installs CPU-only PyTorch from PyTorch's package index (the file includes the `--extra-index-url` line). To train on a GPU machine such as Colab, use `requirements-training.txt` instead.
 
 ## 4. Get the trained model
 The trained checkpoint is intentionally **not stored in the Git repository**.
 
 Download `best_model_finetuned.pth` from the
-[**v1.0.0 release**](https://github.com/rohanchennupati-sudo/avian-intelligence/releases/tag/v1.0.0).
+[**v1.0.0 release**](https://github.com/rohanchennupati-sudo/BirDiD-bird-identifier/releases/tag/v1.0.0).
 
 Place it here:
 ```text
@@ -136,17 +139,15 @@ Run:
 pytest tests/ -v
 ```
 
-Current test suite:
-```text
-5 passed
-```
+Current test suite: 13 tests (the real-model test is skipped if the checkpoint hasn't been downloaded).
 
 The tests cover:
-- mock classifier output structure
-- classifier availability
-- health endpoint
-- successful prediction
-- rejection of unsupported image types
+- mock and real classifier output (top 5 sorted, confidence band)
+- health endpoint and request IDs
+- successful predictions for JPEG and PNG
+- rejection of unsupported types (400), corrupt images (400), oversized files (413) and invalid backend values (422)
+- `backend=pytorch` without a checkpoint (503)
+- the data loaders: training images are augmented, validation and test images are not, and the splits don't overlap
 
 ---
 
@@ -169,7 +170,9 @@ backend=pytorch
 backend=mock
 ```
 
-`auto` uses PyTorch when the checkpoint exists and mock otherwise. A successful response contains the predicted species, confidence level, probability, request ID, and top-five predictions.Interactive API documentation is available automatically through FastAPI at:
+`auto` uses PyTorch when the checkpoint exists and mock otherwise. A successful response contains the predicted species, confidence level, probability, request ID, top-five predictions, and `backend_used`.
+
+Interactive API documentation is available automatically through FastAPI at:
 ```text
 /docs
 ```
@@ -271,7 +274,7 @@ That distinction will be useful as I scale the project in future updates.
 
 # Project structure
 ```text
-avian-intelligence/
+BirDiD-bird-identifier/
 │
 ├── app/
 │   ├── middleware/
@@ -306,14 +309,20 @@ avian-intelligence/
 │   └── index.html
 │
 ├── tests/
+│   ├── conftest.py
 │   ├── test_classifier.py
+│   ├── test_dataset.py
 │   └── test_predict.py
 │
+├── .env.example
 ├── COLAB_TRAINING.md
 ├── Dockerfile
 ├── docker-compose.yml
+├── render.yaml
 ├── LICENSE
-└── requirements.txt
+├── requirements.txt
+├── requirements-training.txt
+└── testconfig.py
 ```
 
 The dataset, environment files, Python virtual environment, and trained checkpoint are deliberately excluded from normal Git history.
@@ -326,12 +335,12 @@ The application can also be run in a container.
 Build:
 
 ```powershell
-docker build -t avian-intelligence .
+docker build -t birdid .
 ```
 
 Run:
 ```powershell
-docker run -p 8000:8000 --env-file .env avian-intelligence
+docker run -p 8000:8000 --env-file .env birdid
 ```
 
 The trained model still needs to be supplied separately.

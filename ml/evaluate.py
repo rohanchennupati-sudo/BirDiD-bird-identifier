@@ -14,6 +14,7 @@ def evaluate_model(
     checkpoint_path: str,
     data_dir: str,
     batch_size: int = 32,
+    output_path: str = "results/evaluation_results.json",
 ) -> dict:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -120,9 +121,8 @@ def evaluate_model(
         ],
     }
 
-    output_path = (
-        Path(checkpoint_path).parent / "evaluation_results.json"
-    )
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(results, indent=2),
         encoding="utf-8",
